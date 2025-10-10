@@ -7,9 +7,12 @@
     "node": ">=18"
   },
   "scripts": {
+    "start": "vite",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "format": "prettier \"src/**/*.{js,jsx,ts,tsx,json,css,md}\" --check",
+    "format:fix": "prettier \"src/**/*.{js,jsx,ts,tsx,json,css,md}\" --write",
     "preview": "vite preview",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
@@ -17,6 +20,7 @@
     "@headlessui/react": "^2.1.8",
     "@heroicons/react": "^2.1.5",
     "clsx": "^2.1.1",
+    "eslint-config-prettier": "^10.1.8",
     "idb": "^8.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -38,6 +42,7 @@
     "autoprefixer": "^10.4.20",
     "babel-jest": "^29.7.0",
     "eslint": "^9.9.0",
+    "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",

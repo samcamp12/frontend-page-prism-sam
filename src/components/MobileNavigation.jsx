@@ -3,17 +3,14 @@ import { Link, useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 import styles from './MobileNavigation.module.css'
 
-const navigation = [
-  { name: 'Dashboard', href: '/' },
-  { name: 'Projects', href: '/projects' },
-]
+import { NAVIGATION_ITEMS } from '../constants/navigation'
 
 const MobileNavigation = () => {
   const location = useLocation()
 
   return (
     <div className={styles.navigationContainer}>
-      {navigation.map((item) => (
+      {NAVIGATION_ITEMS.map((item) => (
         <DisclosureButton
           key={item.name}
           as={Link}

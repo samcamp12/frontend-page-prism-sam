@@ -2,10 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 import styles from './DesktopNavigation.module.css'
 
-const navigation = [
-  { name: 'Dashboard', href: '/' },
-  { name: 'Projects', href: '/projects' },
-]
+import { NAVIGATION_ITEMS } from '../constants/navigation'
 
 const DesktopNavigation = () => {
   const location = useLocation()
@@ -13,7 +10,7 @@ const DesktopNavigation = () => {
   return (
     <div className={styles.container}>
       <div className={styles.navList}>
-        {navigation.map((item) => (
+        {NAVIGATION_ITEMS.map((item) => (
           <Link
             key={item.name}
             to={item.href}

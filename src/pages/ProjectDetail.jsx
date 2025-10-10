@@ -4,8 +4,12 @@ import { getProject } from '../services/project'
 import Button from '../components/Button'
 import styles from './ProjectDetail.module.css'
 
+import { deleteProject } from '../services/project'
+import { Input } from '@headlessui/react'
+
 const ProjectDetail = () => {
   const [project, setProject] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
   const { id } = useParams()
 
   useEffect(() => {
@@ -20,9 +24,22 @@ const ProjectDetail = () => {
     return <div>Loading...</div>
   }
 
+  const handleEditProject = () => {
+    setIsEditing(true)
+  }
+
+  const handleDeleteProject = async (id) => {
+    await deleteProject(id)
+  }
+
   return (
     <div className={styles.container}>
       <h1 className={styles.heading}>{project.name}</h1>
+      {isEditing && (
+        <div className={styles.headingInput}>
+          <Input />
+        </div>
+      )}
       <p className={styles.description}>{project.description}</p>
       <div className={styles.section}>
         <h2 className={styles.subheading}>Project Details</h2>
@@ -51,8 +68,15 @@ const ProjectDetail = () => {
         )}
       </div>
       <div className={styles.buttonContainer}>
-        <Button className={styles.editButton}>Edit Project</Button>
-        <Button className={styles.deleteButton}>Delete Project</Button>
+        <Button className={styles.editButton} onClick={handleEditProject}>
+          Edit Project
+        </Button>
+        <Button
+          className={styles.deleteButton}
+          onClick={() => handleDeleteProject(id)}
+        >
+          Delete Project
+        </Button>
       </div>
     </div>
   )

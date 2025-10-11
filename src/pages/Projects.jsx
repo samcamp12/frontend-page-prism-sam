@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllProjects, createProject } from '../services/project'
-import Button from '../components/Button'
+import Button from '../components/Button/Button'
 
 const Projects = () => {
   const [projects, setProjects] = useState([])

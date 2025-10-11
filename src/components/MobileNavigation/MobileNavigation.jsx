@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 import styles from './MobileNavigation.module.css'
 
-import { NAVIGATION_ITEMS } from '../constants/navigation'
+import { NAVIGATION_ITEMS } from '../../constants/navigation'
 
 const MobileNavigation = () => {
   const location = useLocation()

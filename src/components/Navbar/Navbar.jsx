@@ -1,8 +1,9 @@
 import { Disclosure } from '@headlessui/react'
 import NavbarDesktop from './NavbarDesktop'
 import NavbarMobile from './NavbarMobile'
-import MobileMenuButton from './MobileMenuButton'
+
 import styles from './Navbar.module.css'
+import MobileMenuButton from '../MobileMenuButton/MobileMenuButton'
 
 const Navbar = () => {
   return (

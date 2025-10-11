@@ -1,5 +1,5 @@
 import { DisclosurePanel } from '@headlessui/react'
-import MobileNavigation from './MobileNavigation'
+import MobileNavigation from '../MobileNavigation/MobileNavigation'
 
 const NavbarMobile = () => {
   return (

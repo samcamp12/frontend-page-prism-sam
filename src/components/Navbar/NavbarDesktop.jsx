@@ -1,5 +1,5 @@
-import Logo from './Logo'
-import DesktopNavigation from './DesktopNavigation'
+import DesktopNavigation from '../DesktopNavigation/DesktopNavigation'
+import Logo from '../Logo'
 
 const NavbarDesktop = () => {
   return (

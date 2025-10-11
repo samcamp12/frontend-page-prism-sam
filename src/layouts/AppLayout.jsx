@@ -1,5 +1,5 @@
-import Navbar from '../components/Navbar'
-import Header from '../components/Header'
+import Navbar from '../components/Navbar/Navbar'
+import Header from '../components/Header/Header'
 import styles from './AppLayout.module.css'
 import usePageTitle from '../hooks/usePageTitle'
 

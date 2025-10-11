@@ -1,54 +1,32 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { getProject } from '../services/project'
-import Button from '../components/Button'
-import styles from './ProjectDetail.module.css'
+import { Button } from '@headlessui/react'
+import { Project } from '../../models/schema'
+import styles from './ProjectView.module.css'
 
-import { deleteProject } from '../services/project'
-import { Input } from '@headlessui/react'
+interface ProjectDetailProps {
+  project: Project
+  handleEditProject: () => void
+  handleDeleteProject: (id: string) => void
+  id: string
+}
 
-const ProjectDetail = () => {
-  const [project, setProject] = useState(null)
-  const [isEditing, setIsEditing] = useState(false)
-  const { id } = useParams()
-
-  useEffect(() => {
-    const fetchProject = async () => {
-      const projectData = await getProject(id)
-      setProject(projectData)
-    }
-    fetchProject()
-  }, [id])
-
-  if (!project) {
-    return <div>Loading...</div>
-  }
-
-  const handleEditProject = () => {
-    setIsEditing(true)
-  }
-
-  const handleDeleteProject = async (id) => {
-    await deleteProject(id)
-  }
-
+export const ProjectView = ({
+  project,
+  handleEditProject,
+  handleDeleteProject,
+  id,
+}: ProjectDetailProps) => {
   return (
     <div className={styles.container}>
       <h1 className={styles.heading}>{project.name}</h1>
-      {isEditing && (
-        <div className={styles.headingInput}>
-          <Input />
-        </div>
-      )}
       <p className={styles.description}>{project.description}</p>
       <div className={styles.section}>
         <h2 className={styles.subheading}>Project Details</h2>
         <p>
-          <strong>Created:</strong>{' '}
+          <strong>Created:</strong>
           {new Date(project.createdAt).toLocaleDateString()}
         </p>
         <p>
-          <strong>Last Updated:</strong>{' '}
+          <strong>Last Updated:</strong>
           {new Date(project.updatedAt).toLocaleDateString()}
         </p>
       </div>
@@ -81,5 +59,3 @@ const ProjectDetail = () => {
     </div>
   )
 }
-
-export default ProjectDetail

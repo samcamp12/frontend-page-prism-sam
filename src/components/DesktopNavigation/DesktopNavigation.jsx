@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 import styles from './DesktopNavigation.module.css'
 
-import { NAVIGATION_ITEMS } from '../constants/navigation'
+import { NAVIGATION_ITEMS } from '../../constants/navigation'
 
 const DesktopNavigation = () => {
   const location = useLocation()

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getProject } from '../services/project'
+import { getProject, updateProject } from '../services/project'
 
 import { deleteProject } from '../services/project'
 import { ProjectView } from '../components/Project/ProjectView'
@@ -30,13 +30,19 @@ const ProjectDetail = () => {
     setIsEditing(true)
   }
 
+  const handleSaveProject = async (updates: Partial<Project>) => {
+    if (!id) return
+    const res = await updateProject(id, updates, 100)
+    console.log(res)
+  }
+
   const handleDeleteProject = async (id: string) => {
     await deleteProject(id)
     navigate('/projects')
   }
 
   return isEditing ? (
-    <ProjectForm />
+    <ProjectForm project={project} onSaveFormChange={handleSaveProject} />
   ) : (
     id && (
       <ProjectView

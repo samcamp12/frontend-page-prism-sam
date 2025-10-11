@@ -1,0 +1,61 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.label {
+  margin-bottom: 0.25rem;
+  color: gray;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.addButton,
+.saveButton {
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+}
+
+.addButton {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.addButton:hover {
+  background-color: #2563eb;
+}
+
+.saveButton {
+  background-color: #71757c;
+  color: white;
+}
+
+.saveButton:hover {
+  background-color: #57585c;
+}

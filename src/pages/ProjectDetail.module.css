@@ -45,56 +45,8 @@
   flex-grow: 1;
 }
 
-.deleteButton {
-  background-color: #ef4444;
-  color: white;
-}
-
-.deleteButton:hover {
-  background-color: #dc2626;
-}
-
 .addTaskForm {
   margin-top: 2rem;
-}
-
-.input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-.addButton {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.addButton:hover {
-  background-color: #2563eb;
-}
-
-.buttonContainer {
-  display: flex;
-  justify-content: flex-start;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.editButton,
-.deleteButton {
-  padding: 0.5rem 1rem;
-  font-weight: bold;
-}
-
-.editButton {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.editButton:hover {
-  background-color: #2563eb;
 }
 
 .section {

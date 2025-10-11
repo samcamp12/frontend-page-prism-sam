@@ -24,3 +24,34 @@
 .section {
   margin-bottom: 2rem;
 }
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.editButton,
+.deleteButton {
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+}
+
+.editButton {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.editButton:hover {
+  background-color: #2563eb;
+}
+
+.deleteButton {
+  background-color: #ef4444;
+  color: white;
+}
+
+.deleteButton:hover {
+  background-color: #dc2626;
+}

@@ -5,15 +5,13 @@ import styles from './ProjectView.module.css'
 interface ProjectDetailProps {
   project: Project
   handleEditProject: () => void
-  handleDeleteProject: (id: string) => void
-  id: string
+  handleDeleteProject: () => void
 }
 
 export const ProjectView = ({
   project,
   handleEditProject,
   handleDeleteProject,
-  id,
 }: ProjectDetailProps) => {
   return (
     <div className={styles.container}>
@@ -49,10 +47,7 @@ export const ProjectView = ({
         <Button className={styles.editButton} onClick={handleEditProject}>
           Edit Project
         </Button>
-        <Button
-          className={styles.deleteButton}
-          onClick={() => handleDeleteProject(id)}
-        >
+        <Button className={styles.deleteButton} onClick={handleDeleteProject}>
           Delete Project
         </Button>
       </div>

@@ -32,11 +32,12 @@ const ProjectDetail = () => {
 
   const handleSaveProject = async (updates: Partial<Project>) => {
     if (!id) return
-    const res = await updateProject(id, updates, 100)
-    console.log(res)
+    await updateProject(id, updates, 100)
+    navigate('/projects')
   }
 
-  const handleDeleteProject = async (id: string) => {
+  const handleDeleteProject = async () => {
+    if (!id) return
     await deleteProject(id)
     navigate('/projects')
   }
@@ -48,7 +49,6 @@ const ProjectDetail = () => {
       <ProjectView
         handleEditProject={handleEditProject}
         handleDeleteProject={handleDeleteProject}
-        id={id}
         project={project}
       />
     )

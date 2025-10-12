@@ -1,4 +1,4 @@
-const BASE_URL = 'https://screenshotof.com'
+const BASE_URL = '/screenshot'
 
 /**
  * Fetches a screenshot of a website.

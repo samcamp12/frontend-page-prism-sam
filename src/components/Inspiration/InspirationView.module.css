@@ -1,0 +1,29 @@
+.inspirationItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editButton,
+.deleteButton {
+  padding: 0.25rem;
+  width: 4rem;
+  border: 1px solid darkgray;
+  border-radius: 0.25rem;
+}
+
+.editButton {
+  color: gray;
+}
+
+.deleteButton {
+  color: salmon;
+}

@@ -13,7 +13,12 @@ import { useState } from 'react'
 import { Inspiration, Project, WebsiteMetadata } from '../../models/schema'
 import { InspirationForm } from '../Inspiration/InspirationForm'
 import { getMetadata } from '../../utils/api'
-import { createInspiration } from '../../services/inspiration'
+import {
+  createInspiration,
+  deleteInspiration,
+  updateInspiration,
+} from '../../services/inspiration'
+import { InspirationView } from '../Inspiration/InspirationView'
 
 interface ProjectFormProps {
   project: Project
@@ -28,6 +33,9 @@ export const ProjectForm = ({
   const [description, setDescription] = useState(project.description)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [inspirations, setInspirations] = useState(project.inspirations ?? [])
+  const [currentInspiration, setCurrentInspiration] = useState<
+    Inspiration | undefined
+  >()
 
   const onProjectNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProjectName(e.target.value)
@@ -37,7 +45,10 @@ export const ProjectForm = ({
     setDescription(e.target.value)
   }
 
-  const onAddInspiration = () => {
+  const onAddEditInspiration = (inspiration?: Inspiration) => {
+    if (inspiration) {
+      setCurrentInspiration(inspiration)
+    }
     setIsDialogOpen(true)
   }
 
@@ -45,23 +56,53 @@ export const ProjectForm = ({
     setIsDialogOpen(false)
   }
 
+  const onDeleteInspiration = async (inspirationId: string) => {
+    await deleteInspiration(inspirationId)
+    onSaveFormChange({
+      name: projectName,
+      description: description,
+      inspirations: inspirations.filter(
+        (inspiration) => inspiration.id !== inspirationId
+      ),
+    })
+    setCurrentInspiration(undefined)
+  }
+
   const handleSaveInspiration = async (
     websiteURI: string,
     date: string | null
   ) => {
+    // TODO add error handling for invalid URL
     const websiteMetadata = (await getMetadata(
       websiteURI,
       date
     )) as WebsiteMetadata
-
-    console.log(websiteURI, date, websiteMetadata)
-    const newInspiration: Inspiration = await createInspiration({
-      projectId: project.id,
-      screenshot_uri: websiteURI,
-      websiteMetadata: websiteMetadata,
-      notes: '',
-    })
-    setInspirations((inspirations) => [...inspirations, newInspiration])
+    if (currentInspiration) {
+      const updatedInspiration = await updateInspiration(
+        currentInspiration.id,
+        {
+          screenshot_uri: websiteURI,
+          websiteMetadata: websiteMetadata,
+        }
+      )
+      setInspirations((inspirations) =>
+        inspirations.map((inspiration) => {
+          if (inspiration.id === currentInspiration.id) {
+            return updatedInspiration
+          }
+          return inspiration
+        })
+      )
+      setCurrentInspiration(undefined)
+    } else {
+      const newInspiration: Inspiration = await createInspiration({
+        projectId: project.id,
+        screenshot_uri: websiteURI,
+        websiteMetadata: websiteMetadata,
+        notes: '',
+      })
+      setInspirations((inspirations) => [...inspirations, newInspiration])
+    }
     closeDialog()
   }
 
@@ -88,8 +129,19 @@ export const ProjectForm = ({
             />
           </Field>
         </div>
+        <div>
+          <span className={styles.label}>Inspirations</span>
+          <InspirationView
+            inspirations={inspirations}
+            onAddEditInspiration={onAddEditInspiration}
+            onDeleteInspiration={onDeleteInspiration}
+          />
+        </div>
         <div className={styles.buttonContainer}>
-          <Button className={styles.addButton} onClick={onAddInspiration}>
+          <Button
+            className={styles.addButton}
+            onClick={() => onAddEditInspiration()}
+          >
             Add Inspirations
           </Button>
           <Button
@@ -114,7 +166,10 @@ export const ProjectForm = ({
       >
         <div className={styles.dialogContainer}>
           <DialogPanel className={styles.dialogPanel} transition>
-            <InspirationForm onSaveInspiration={handleSaveInspiration} />
+            <InspirationForm
+              onSaveInspiration={handleSaveInspiration}
+              inspiration={currentInspiration}
+            />
           </DialogPanel>
         </div>
       </Dialog>

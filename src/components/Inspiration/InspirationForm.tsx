@@ -2,15 +2,20 @@ import { Field, Label, Input, Button } from '@headlessui/react'
 
 import styles from './InspirationForm.module.css'
 import { useState } from 'react'
+import { Inspiration } from '../../models/schema'
 
 interface InspirationFormProps {
   onSaveInspiration: (websiteURI: string, date: string | null) => void
+  inspiration?: Inspiration
 }
 
 export const InspirationForm = ({
   onSaveInspiration,
+  inspiration,
 }: InspirationFormProps) => {
-  const [websiteURI, setWebsiteURI] = useState<string>('')
+  const [websiteURI, setWebsiteURI] = useState<string>(
+    inspiration?.websiteMetadata.urlRequested ?? ''
+  )
   const [date, setDate] = useState<string | null>(null)
 
   const onWebsiteURIChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +37,7 @@ export const InspirationForm = ({
           inputMode="url"
           autoCapitalize="off"
           autoCorrect="off"
-          placeholder="https://example.com"
+          placeholder="bbc.co.uk"
           spellCheck={false}
         />
       </Field>
@@ -40,7 +45,7 @@ export const InspirationForm = ({
         <Label className={styles.label}>{'Capture Date (Optional)'}</Label>
         <Input
           className={styles.input}
-          type="date"
+          type="month"
           value={date ?? ''}
           onChange={onDateChange}
         />

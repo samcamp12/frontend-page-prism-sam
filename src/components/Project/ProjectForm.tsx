@@ -10,15 +10,8 @@ import {
 
 import styles from './projectForm.module.css'
 import { useState } from 'react'
-import { Inspiration, Project, WebsiteMetadata } from '../../models/schema'
-import { InspirationForm } from '../Inspiration/InspirationForm'
-import { getMetadata } from '../../utils/api'
-import {
-  createInspiration,
-  deleteInspiration,
-  updateInspiration,
-} from '../../services/inspiration'
-import { InspirationView } from '../Inspiration/InspirationView'
+import { Project } from '../../models/schema'
+import { getInspiration } from '../../services/inspiration'
 
 interface ProjectFormProps {
   project: Project
@@ -32,10 +25,7 @@ export const ProjectForm = ({
   const [projectName, setProjectName] = useState(project.name)
   const [description, setDescription] = useState(project.description)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [inspirations, setInspirations] = useState(project.inspirations ?? [])
-  const [currentInspiration, setCurrentInspiration] = useState<
-    Inspiration | undefined
-  >()
+  const [inspirations, setInspirations] = useState(project.inspirations)
 
   const onProjectNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProjectName(e.target.value)
@@ -45,10 +35,7 @@ export const ProjectForm = ({
     setDescription(e.target.value)
   }
 
-  const onAddEditInspiration = (inspiration?: Inspiration) => {
-    if (inspiration) {
-      setCurrentInspiration(inspiration)
-    }
+  const onAddInspiration = () => {
     setIsDialogOpen(true)
   }
 
@@ -56,54 +43,32 @@ export const ProjectForm = ({
     setIsDialogOpen(false)
   }
 
-  const onDeleteInspiration = async (inspirationId: string) => {
-    await deleteInspiration(inspirationId)
-    onSaveFormChange({
-      name: projectName,
-      description: description,
-      inspirations: inspirations.filter(
-        (inspiration) => inspiration.id !== inspirationId
-      ),
-    })
-    setCurrentInspiration(undefined)
-  }
+  const handleSaveInspiration = async (newInspirationIds: string[]) => {
+    const adds: string[] = []
+    const removes: string[] = []
 
-  const handleSaveInspiration = async (
-    websiteURI: string,
-    date: string | null
-  ) => {
-    // TODO add error handling for invalid URL
-    const websiteMetadata = (await getMetadata(
-      websiteURI,
-      date
-    )) as WebsiteMetadata
-    if (currentInspiration) {
-      const updatedInspiration = await updateInspiration(
-        currentInspiration.id,
-        {
-          screenshot_uri: websiteURI,
-          websiteMetadata: websiteMetadata,
-        }
-      )
-      setInspirations((inspirations) =>
-        inspirations.map((inspiration) => {
-          if (inspiration.id === currentInspiration.id) {
-            return updatedInspiration
-          }
-          return inspiration
-        })
-      )
-      setCurrentInspiration(undefined)
+    for (const id of newInspirationIds)
+      if (!inspirations.map((inspiration) => inspiration.id).includes(id))
+        adds.push(id)
+    for (const { id } of inspirations)
+      if (!newInspirationIds.includes(id)) removes.push(id)
+
+    if (adds.length === 0 && removes.length === 0) return
+
+    const filteredInspirations = inspirations.filter(
+      (inspiration) => !removes.includes(inspiration.id)
+    )
+    if (adds.length === 0) {
+      setInspirations(filteredInspirations)
     } else {
-      const newInspiration: Inspiration = await createInspiration({
-        projectId: project.id,
-        screenshot_uri: websiteURI,
-        websiteMetadata: websiteMetadata,
-        notes: '',
-      })
-      setInspirations((inspirations) => [...inspirations, newInspiration])
+      const newInspirations = await Promise.all(
+        adds.map((id) => getInspiration(id))
+      )
+      setInspirations([
+        ...filteredInspirations,
+        ...newInspirations.filter((x) => x !== undefined),
+      ])
     }
-    closeDialog()
   }
 
   return (
@@ -131,16 +96,22 @@ export const ProjectForm = ({
         </div>
         <div>
           <span className={styles.label}>Inspirations</span>
-          <InspirationView
-            inspirations={inspirations}
-            onAddEditInspiration={onAddEditInspiration}
-            onDeleteInspiration={onDeleteInspiration}
-          />
+          {inspirations.length > 0 ? (
+            <ul className={styles.inspirationList}>
+              {inspirations.map((inspiration) => (
+                <div className={styles.inspirationItem} key={inspiration.id}>
+                  <li>{inspiration.websiteMetadata.urlRequested}</li>
+                </div>
+              ))}
+            </ul>
+          ) : (
+            <p>No inspirations added yet.</p>
+          )}
         </div>
         <div className={styles.buttonContainer}>
           <Button
             className={styles.addButton}
-            onClick={() => onAddEditInspiration()}
+            onClick={() => onAddInspiration()}
           >
             Add Inspirations
           </Button>
@@ -166,10 +137,7 @@ export const ProjectForm = ({
       >
         <div className={styles.dialogContainer}>
           <DialogPanel className={styles.dialogPanel} transition>
-            <InspirationForm
-              onSaveInspiration={handleSaveInspiration}
-              inspiration={currentInspiration}
-            />
+            <div>Select inspirations</div>
           </DialogPanel>
         </div>
       </Dialog>

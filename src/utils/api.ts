@@ -11,7 +11,7 @@ interface ScreenshotOptions {
  * @param websiteUri - The URI of the website to screenshot.
  * @param date - Optional. The date of the screenshot (2024-01 - 2024-10).
  * @param options - Optional. Additional query parameters for the request.
- * @returns A Promise that resolves to the object URL of the screenshot blob.
+ * @returns A Promise that resolves to a base64 data URL of the screenshot.
  * @throws {Error} If there's an HTTP error or other issues during the fetch.
  */
 export async function getScreenshot(
@@ -32,7 +32,13 @@ export async function getScreenshot(
     }
 
     const blob = await response.blob()
-    return URL.createObjectURL(blob)
+    // Convert blob to base64 data URL for persistent storage
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result as string)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    })
   } catch (error) {
     console.error('Error getting screenshot:', error)
     throw error

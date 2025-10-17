@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getProject, deleteProject, updateProject } from '../services/project'
-import { Project } from '../models/schema'
+import {
+  getInspirationsByProject,
+  createInspiration,
+  deleteInspiration,
+} from '../services/inspiration'
+import { getScreenshot, getMetadata } from '../utils/api'
+import { Project, Inspiration } from '../models/schema'
 import Button from '../components/Button'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorMessage from '../components/ErrorMessage'
+import InspirationGrid from '../components/InspirationGrid'
+import AddInspirationModal from '../components/AddInspirationModal'
+import InspirationDetailModal from '../components/InspirationDetailModal'
 import usePageTitle from '../hooks/usePageTitle'
 import styles from './ProjectDetail.module.css'
 import { Input } from '@headlessui/react'
@@ -19,13 +28,22 @@ const ProjectDetail: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
+  // Inspiration state
+  const [inspirations, setInspirations] = useState<Inspiration[]>([])
+  const [isLoadingInspirations, setIsLoadingInspirations] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showDetailModal, setShowDetailModal] = useState(false)
+  const [selectedInspiration, setSelectedInspiration] =
+    useState<Inspiration | null>(null)
+
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
   usePageTitle(project?.name || 'Project Detail')
 
+  // Fetch project and inspirations
   useEffect(() => {
-    const fetchProject = async () => {
+    const fetchData = async () => {
       if (!id) {
         setError('Project ID is missing')
         setIsLoading(false)
@@ -35,22 +53,30 @@ const ProjectDetail: React.FC = () => {
       try {
         setIsLoading(true)
         setError(null)
+
+        // Fetch project
         const projectData = await getProject(id)
         if (!projectData) {
           setError('Project not found')
-        } else {
-          setProject(projectData)
-          setEditedName(projectData.name)
-          setEditedDescription(projectData.description)
+          return
         }
+        setProject(projectData)
+        setEditedName(projectData.name)
+        setEditedDescription(projectData.description)
+
+        // Fetch inspirations
+        setIsLoadingInspirations(true)
+        const inspirationsData = await getInspirationsByProject(id)
+        setInspirations(inspirationsData)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load project')
+        setError(err instanceof Error ? err.message : 'Failed to load data')
       } finally {
         setIsLoading(false)
+        setIsLoadingInspirations(false)
       }
     }
 
-    fetchProject()
+    fetchData()
   }, [id])
 
   const handleEditProject = () => {
@@ -100,6 +126,75 @@ const ProjectDetail: React.FC = () => {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete project')
       setIsDeleting(false)
+    }
+  }
+
+  // Inspiration handlers
+  const handleAddInspiration = async (data: {
+    url: string
+    notes: string
+    date?: string
+  }) => {
+    if (!id) return
+
+    try {
+      // Fetch screenshot and metadata
+      const screenshotUri = await getScreenshot(data.url, data.date || null)
+      const metadata = await getMetadata(data.url, data.date || null)
+
+      // Create inspiration
+      const newInspiration = await createInspiration({
+        projectId: id,
+        websiteMetadata: metadata,
+        screenshot_uri: screenshotUri,
+        notes: data.notes,
+      })
+
+      // Update local state
+      setInspirations([...inspirations, newInspiration])
+
+      // Update project's inspirations array
+      if (project) {
+        const updatedProject = await updateProject(id, {
+          inspirations: [...inspirations, newInspiration],
+        })
+        setProject(updatedProject)
+      }
+    } catch (err) {
+      throw new Error(
+        err instanceof Error ? err.message : 'Failed to add inspiration'
+      )
+    }
+  }
+
+  const handleViewInspiration = (inspiration: Inspiration) => {
+    setSelectedInspiration(inspiration)
+    setShowDetailModal(true)
+  }
+
+  const handleDeleteInspiration = async (inspirationId: string) => {
+    if (!id) return
+
+    try {
+      await deleteInspiration(inspirationId)
+
+      // Update local state
+      const updatedInspirations = inspirations.filter(
+        (i) => i.id !== inspirationId
+      )
+      setInspirations(updatedInspirations)
+
+      // Update project's inspirations array
+      if (project) {
+        const updatedProject = await updateProject(id, {
+          inspirations: updatedInspirations,
+        })
+        setProject(updatedProject)
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to delete inspiration'
+      )
     }
   }
 
@@ -183,21 +278,23 @@ const ProjectDetail: React.FC = () => {
         </p>
       </div>
 
+      {/* Inspirations Section */}
       <div className={styles.section}>
-        <h2 className={styles.subheading}>Inspirations</h2>
-        {project.inspirations?.length > 0 ? (
-          <ul className={styles.inspirationList}>
-            {project.inspirations.map((inspiration) => (
-              <li key={inspiration.id}>
-                {inspiration.websiteMetadata?.title ||
-                  inspiration.websiteMetadata?.url ||
-                  'Untitled'}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500">No inspirations added yet.</p>
-        )}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className={styles.subheading}>
+            Inspirations ({inspirations.length})
+          </h2>
+          <Button onClick={() => setShowAddModal(true)}>
+            + Add Inspiration
+          </Button>
+        </div>
+
+        <InspirationGrid
+          inspirations={inspirations}
+          isLoading={isLoadingInspirations}
+          onView={handleViewInspiration}
+          onDelete={handleDeleteInspiration}
+        />
       </div>
 
       {!isEditing && (
@@ -214,6 +311,23 @@ const ProjectDetail: React.FC = () => {
           </Button>
         </div>
       )}
+
+      {/* Modals */}
+      <AddInspirationModal
+        projectId={id || ''}
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onAdd={handleAddInspiration}
+      />
+
+      <InspirationDetailModal
+        inspiration={selectedInspiration}
+        isOpen={showDetailModal}
+        onClose={() => {
+          setShowDetailModal(false)
+          setSelectedInspiration(null)
+        }}
+      />
     </div>
   )
 }

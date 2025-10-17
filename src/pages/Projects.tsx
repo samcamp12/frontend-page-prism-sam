@@ -101,7 +101,7 @@ const Projects: React.FC = () => {
                         </div>
                         <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
                           <p>
-                            Updated{' '}
+                            Updated
                             {new Date(project.updatedAt).toLocaleDateString()}
                           </p>
                         </div>

@@ -3,6 +3,7 @@ import App from './App'
 import Dashboard from './pages/Dashboard'
 import Projects from './pages/Projects'
 import ProjectDetail from './pages/ProjectDetail'
+
 const router = createBrowserRouter([
   {
     path: '/',

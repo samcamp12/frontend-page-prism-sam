@@ -1,7 +1,8 @@
+import React from 'react'
 import { DisclosurePanel } from '@headlessui/react'
 import MobileNavigation from './MobileNavigation'
 
-const NavbarMobile = () => {
+const NavbarMobile: React.FC = () => {
   return (
     <DisclosurePanel className="md:hidden">
       <MobileNavigation />

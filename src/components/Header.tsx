@@ -1,6 +1,11 @@
+import React from 'react'
 import styles from './Header.module.css'
 
-const Header = ({ title }) => {
+interface HeaderProps {
+  title?: string
+}
+
+const Header: React.FC<HeaderProps> = ({ title = 'Page Prism' }) => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>

@@ -1,8 +1,13 @@
+import React from 'react'
 import { DisclosureButton } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import styles from './MobileMenuButton.module.css'
 
-const MobileMenuButton = ({ open }) => {
+interface MobileMenuButtonProps {
+  open: boolean
+}
+
+const MobileMenuButton: React.FC<MobileMenuButtonProps> = ({ open }) => {
   return (
     <DisclosureButton className={styles.button}>
       <span className="sr-only">Open main menu</span>

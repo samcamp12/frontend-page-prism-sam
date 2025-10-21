@@ -1,102 +1,190 @@
 .container {
-  max-width: 800px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2.5rem 1.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .heading {
+  margin: 0;
   font-size: 2.25rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-.subheading {
-  font-weight: 600;
-  margin-bottom: 0.55rem;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .description {
-  font-size: 1rem;
+  margin: 0;
+  font-size: 1.05rem;
   color: #4b5563;
-  margin-bottom: 2rem;
+  max-width: 60ch;
+  line-height: 1.6;
 }
 
-.taskList {
-  list-style-type: none;
-  padding: 0;
-}
-
-.taskItem {
+.headerActions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  padding: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
+  gap: 0.75rem;
 }
 
-.taskItem:last-child {
-  border-bottom: none;
+.primaryAction {
+  background-color: #111827;
 }
 
-.checkbox {
-  margin-right: 0.75rem;
+.primaryAction:hover {
+  background-color: #0f172a;
 }
 
-.taskText {
-  flex-grow: 1;
+.secondaryButton {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.secondaryButton:hover {
+  background-color: #d1d5db;
 }
 
 .deleteButton {
   background-color: #ef4444;
-  color: white;
 }
 
 .deleteButton:hover {
   background-color: #dc2626;
 }
 
-.addTaskForm {
-  margin-top: 2rem;
+.metaSection {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(59, 130, 246, 0.08));
+  border: 1px solid rgba(99, 102, 241, 0.12);
 }
 
-.input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.25rem;
-  margin-bottom: 1rem;
+.metaGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
-.addButton {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.addButton:hover {
-  background-color: #2563eb;
-}
-
-.buttonContainer {
+.metaItem {
   display: flex;
-  justify-content: flex-start;
-  gap: 1rem;
-  margin-top: 2rem;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-.editButton,
-.deleteButton {
-  padding: 0.5rem 1rem;
-  font-weight: bold;
+.metaLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6366f1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.editButton {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.editButton:hover {
-  background-color: #2563eb;
+.metaValue {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0f172a;
 }
 
 .section {
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.subheading {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+}
+
+.inlineError {
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 0.95rem;
+}
+
+.loadingState,
+.errorState {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  text-align: center;
+  border-radius: 1rem;
+  background-color: #f8fafc;
+  border: 1px dashed #cbd5f5;
+  color: #1f2937;
+}
+
+.errorTitle {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #b91c1c;
+}
+
+.errorCopy {
+  margin: 0 auto;
+  max-width: 36ch;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 2rem 1rem 2.5rem;
+  }
+
+  .heading {
+    font-size: 1.9rem;
+  }
+
+  .metaSection {
+    padding: 1.25rem;
+  }
 }

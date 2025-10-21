@@ -2,6 +2,23 @@ import { v4 as uuidv4 } from 'uuid'
 import { getDB } from '../utils/indexedDB'
 import { Project } from '../models/schema'
 import mockLatency from '../utils/mockLatency'
+import { getInspirationsByProject } from './inspiration'
+
+type CreateProjectInput = Omit<Project, 'id' | 'createdAt' | 'updatedAt' | 'inspirations'> & {
+  inspirations?: Project['inspirations']
+}
+
+type UpdateProjectInput = Partial<
+  Omit<Project, 'id' | 'createdAt' | 'updatedAt' | 'inspirations'>
+>
+
+async function hydrateProject(project: Project): Promise<Project> {
+  const inspirations = await getInspirationsByProject(project.id)
+  return {
+    ...project,
+    inspirations,
+  }
+}
 
 /**
  * Creates a new project in the database.
@@ -10,7 +27,7 @@ import mockLatency from '../utils/mockLatency'
  * @returns A Promise that resolves to the newly created Project.
  */
 export async function createProject(
-  project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>,
+  project: CreateProjectInput,
   latencyMs?: number
 ): Promise<Project> {
   await mockLatency(latencyMs)
@@ -20,6 +37,7 @@ export async function createProject(
     id: uuidv4(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    inspirations: project.inspirations ?? [],
   }
   await db.add('projects', newProject)
   return newProject
@@ -37,7 +55,11 @@ export async function getProject(
 ): Promise<Project | undefined> {
   await mockLatency(latencyMs)
   const db = await getDB()
-  return db.get('projects', id)
+  const project = await db.get('projects', id)
+  if (!project) {
+    return undefined
+  }
+  return hydrateProject(project)
 }
 
 /**
@@ -48,7 +70,8 @@ export async function getProject(
 export async function getAllProjects(latencyMs?: number): Promise<Project[]> {
   await mockLatency(latencyMs)
   const db = await getDB()
-  return db.getAll('projects')
+  const projects = await db.getAll('projects')
+  return Promise.all(projects.map((project) => hydrateProject(project)))
 }
 
 /**
@@ -61,7 +84,7 @@ export async function getAllProjects(latencyMs?: number): Promise<Project[]> {
  */
 export async function updateProject(
   id: string,
-  updates: Partial<Project>,
+  updates: UpdateProjectInput,
   latencyMs?: number
 ): Promise<Project> {
   await mockLatency(latencyMs)
@@ -76,7 +99,7 @@ export async function updateProject(
     updatedAt: new Date().toISOString(),
   }
   await db.put('projects', updatedProject)
-  return updatedProject
+  return hydrateProject(updatedProject)
 }
 
 /**
@@ -91,5 +114,9 @@ export async function deleteProject(
 ): Promise<void> {
   await mockLatency(latencyMs)
   const db = await getDB()
+  const inspirations = await getInspirationsByProject(id, 0)
+  await Promise.all(
+    inspirations.map((inspiration) => db.delete('inspirations', inspiration.id))
+  )
   await db.delete('projects', id)
 }

@@ -1,0 +1,265 @@
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.heading {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.subheading {
+  margin: 0;
+  max-width: 64ch;
+  font-size: 1.05rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.primaryAction {
+  align-self: flex-start;
+  background-color: #111827;
+}
+
+.primaryAction:hover {
+  background-color: #0f172a;
+}
+
+.errorBanner {
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 0.95rem;
+}
+
+.statsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.statCard {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.14), rgba(14, 116, 144, 0.08));
+  color: #0f172a;
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.statLabel {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(17, 24, 39, 0.68);
+}
+
+.statValue {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.statHint {
+  font-size: 0.9rem;
+  color: rgba(17, 24, 39, 0.75);
+}
+
+.loadingShell {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.loadingCard {
+  height: 180px;
+  border-radius: 1rem;
+  background: linear-gradient(100deg, #f3f4f6 20%, #e5e7eb 50%, #f3f4f6 80%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.recentSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sectionHeading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.sectionHint {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.projectList,
+.inspirationList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.projectListItem,
+.inspirationItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background-color: #ffffff;
+  box-shadow: 0 16px 40px -36px rgba(15, 23, 42, 0.55);
+}
+
+.projectListItem {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.projectLink {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4f46e5;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.projectLink:hover {
+  text-decoration: underline;
+}
+
+.projectDescription {
+  margin: 0.35rem 0 0 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.projectTimestamp {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.emptyRow {
+  padding: 1.5rem;
+  border-radius: 0.9rem;
+  border: 1px dashed #cbd5f5;
+  text-align: center;
+  color: #475569;
+  background-color: #f8fafc;
+}
+
+.inspirationMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.inspirationTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.inspirationProject {
+  font-size: 0.85rem;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.inspirationDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.inspirationNotes {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.inspirationTimestamp {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .sectionHeading {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 2rem 1rem 2.5rem;
+  }
+
+  .projectListItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+

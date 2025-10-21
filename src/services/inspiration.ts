@@ -3,26 +3,42 @@ import { getDB } from '../utils/indexedDB'
 import { Inspiration } from '../models/schema'
 import mockLatency from '../utils/mockLatency'
 
+export interface InspirationMutationResult {
+  inspiration: Inspiration
+  inspirations: Inspiration[]
+}
+
+export interface InspirationDeletionResult {
+  deletedId: string
+  inspirations: Inspiration[]
+}
+
+type CreateInspirationInput = Omit<Inspiration, 'id' | 'createdAt' | 'updatedAt'>
+
+type UpdateInspirationInput = Partial<Omit<Inspiration, 'id' | 'createdAt' | 'updatedAt'>>
+
 /**
  * Creates a new inspiration entry in the database.
  * @param inspiration - The inspiration object without id, createdAt, and updatedAt fields.
  * @param latencyMs - Optional. The number of milliseconds to simulate latency.
- * @returns A Promise that resolves to the newly created Inspiration object.
+ * @returns A Promise that resolves to both the new inspiration and the latest list for the project.
  */
 export async function createInspiration(
-  inspiration: Omit<Inspiration, 'id' | 'createdAt' | 'updatedAt'>,
+  inspiration: CreateInspirationInput,
   latencyMs?: number
-): Promise<Inspiration> {
+): Promise<InspirationMutationResult> {
   await mockLatency(latencyMs)
   const db = await getDB()
+  const now = new Date().toISOString()
   const newInspiration: Inspiration = {
     ...inspiration,
     id: uuidv4(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: now,
+    updatedAt: now,
   }
   await db.add('inspirations', newInspiration)
-  return newInspiration
+  const inspirations = await getInspirationsByProject(newInspiration.projectId)
+  return { inspiration: newInspiration, inspirations }
 }
 
 /**
@@ -60,40 +76,49 @@ export async function getInspirationsByProject(
  * @param id - The unique identifier of the inspiration to update.
  * @param updates - An object containing the fields to update.
  * @param latencyMs - Optional. The number of milliseconds to simulate latency.
- * @returns A Promise that resolves to the updated Inspiration object.
+ * @returns A Promise that resolves to the updated inspiration and the current list for the project.
  * @throws Error if the inspiration is not found.
  */
 export async function updateInspiration(
   id: string,
-  updates: Partial<Inspiration>,
+  updates: UpdateInspirationInput,
   latencyMs?: number
-): Promise<Inspiration> {
+): Promise<InspirationMutationResult> {
   await mockLatency(latencyMs)
   const db = await getDB()
   const inspiration = await db.get('inspirations', id)
   if (!inspiration) {
     throw new Error('Inspiration not found')
   }
+  const projectId = updates.projectId ?? inspiration.projectId
   const updatedInspiration: Inspiration = {
     ...inspiration,
     ...updates,
+    projectId,
     updatedAt: new Date().toISOString(),
   }
   await db.put('inspirations', updatedInspiration)
-  return updatedInspiration
+  const inspirations = await getInspirationsByProject(projectId)
+  return { inspiration: updatedInspiration, inspirations }
 }
 
 /**
  * Deletes an inspiration entry from the database.
  * @param id - The unique identifier of the inspiration to delete.
  * @param latencyMs - Optional. The number of milliseconds to simulate latency.
- * @returns A Promise that resolves when the deletion is complete.
+ * @returns A Promise that resolves to the deleted id and the refreshed project inspirations.
  */
 export async function deleteInspiration(
   id: string,
   latencyMs?: number
-): Promise<void> {
+): Promise<InspirationDeletionResult> {
   await mockLatency(latencyMs)
   const db = await getDB()
+  const inspiration = await db.get('inspirations', id)
+  if (!inspiration) {
+    throw new Error('Inspiration not found')
+  }
   await db.delete('inspirations', id)
+  const inspirations = await getInspirationsByProject(inspiration.projectId)
+  return { deletedId: id, inspirations }
 }

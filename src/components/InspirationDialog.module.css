@@ -1,0 +1,114 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+.container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.panel {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 40px 80px -40px rgba(15, 23, 42, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.overlayEnter {
+  transition: opacity 0.2s ease-out;
+}
+
+.overlayEnterFrom {
+  opacity: 0;
+}
+
+.overlayEnterTo {
+  opacity: 1;
+}
+
+.overlayLeave {
+  transition: opacity 0.15s ease-in;
+}
+
+.overlayLeaveFrom {
+  opacity: 1;
+}
+
+.overlayLeaveTo {
+  opacity: 0;
+}
+
+.panelEnter {
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.panelEnterFrom {
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+}
+
+.panelEnterTo {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.panelLeave {
+  transition: opacity 0.15s ease-in, transform 0.15s ease-in;
+}
+
+.panelLeaveFrom {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.panelLeaveTo {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+}
+
+@media (max-width: 640px) {
+  .panel {
+    max-width: none;
+    padding: 1.5rem;
+  }
+}
+

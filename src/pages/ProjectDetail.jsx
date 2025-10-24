@@ -44,11 +44,11 @@ const ProjectDetail = () => {
       <div className={styles.section}>
         <h2 className={styles.subheading}>Project Details</h2>
         <p>
-          <strong>Created:</strong>{' '}
+          <strong>Created:</strong>
           {new Date(project.createdAt).toLocaleDateString()}
         </p>
         <p>
-          <strong>Last Updated:</strong>{' '}
+          <strong>Last Updated:</strong>
           {new Date(project.updatedAt).toLocaleDateString()}
         </p>
       </div>

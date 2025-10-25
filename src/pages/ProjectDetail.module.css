@@ -58,14 +58,6 @@
   margin-top: 2rem;
 }
 
-.input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.25rem;
-  margin-bottom: 1rem;
-}
-
 .addButton {
   background-color: #3b82f6;
   color: white;
@@ -99,4 +91,52 @@
 
 .section {
   margin-bottom: 2rem;
+}
+
+/* edit form */
+.label {
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+.editForm {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.formButtons {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 1rem;
 }

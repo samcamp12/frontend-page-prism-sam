@@ -1,0 +1,45 @@
+.container {
+  width: 14rem;
+  height: 22rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.imageContainer {
+  width: 100%;
+  height: 200px;
+  margin-bottom: 0.5rem;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+}
+
+.title,
+.url {
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 0.5rem;
+}
+
+.url {
+  color: slateblue;
+}
+
+.bottomBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+}

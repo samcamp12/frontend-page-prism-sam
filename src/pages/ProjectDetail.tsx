@@ -7,6 +7,7 @@ import styles from './ProjectDetail.module.css'
 import { deleteProject } from '../services/project'
 import { Field, Input, Label, Textarea } from '@headlessui/react'
 import { Project } from '../models/schema'
+import { InspirationGrid } from '../components/InspirationGrid'
 
 const ProjectDetail = () => {
   const [project, setProject] = useState<Project>()
@@ -19,6 +20,7 @@ const ProjectDetail = () => {
     if (!id) return
     const fetchProject = async () => {
       const projectData = await getProject(id)
+      console.log(projectData)
       setProject(projectData)
     }
     fetchProject()
@@ -100,18 +102,7 @@ const ProjectDetail = () => {
       </div>
       <div className={styles.section}>
         <h2 className={styles.subheading}>Inspirations</h2>
-        {project.inspirations?.length > 0 ? (
-          <ul className={styles.inspirationList}>
-            {project.inspirations.map((inspiration) => (
-              <li key={inspiration.id}>
-                {inspiration.websiteMetadata.title ||
-                  inspiration.websiteMetadata.url}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No inspirations added yet.</p>
-        )}
+        <InspirationGrid inspirations={project.inspirations} />
       </div>
       {!isEditing && (
         <div className={styles.buttonContainer}>

@@ -6,26 +6,27 @@ import styles from './ProjectDetail.module.css'
 
 import { deleteProject } from '../services/project'
 import { Field, Input, Label, Textarea } from '@headlessui/react'
-import { Project, WebsiteMetadata } from '../models/schema'
+import { Project } from '../models/schema'
 import { InspirationGrid } from '../components/InspirationGrid'
 import { InspirationDialog } from '../components/InspirationDialog'
 import { getMetadata, getScreenshot } from '../utils/api'
 import { createInspiration } from '../services/inspiration'
 
 const ProjectDetail = () => {
-  const [project, setProject] = useState<Project>()
+  const [project, setProject] = useState<Project>({} as Project)
   const [isEditing, setIsEditing] = useState(false)
   const { id } = useParams<string>()
-  const [name, setName] = useState(project?.name ?? '')
-  const [description, setDescription] = useState(project?.description ?? '')
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  if (!id) return <></>
 
   useEffect(() => {
     if (!id) return
     const fetchProject = async () => {
       const projectData = await getProject(id)
-      console.log(projectData)
-      setProject(projectData)
+      if (projectData) {
+        console.log(projectData)
+        setProject(projectData)
+      }
     }
     fetchProject()
   }, [id])
@@ -43,19 +44,26 @@ const ProjectDetail = () => {
     await deleteProject(id)
   }
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value)
+    setProject((prev) => ({
+      ...prev,
+      name: e.target.value,
+    }))
   }
 
   const onDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value)
+    setProject((prev) => ({
+      ...prev,
+      description: e.target.value,
+    }))
   }
 
   const handleCancel = () => {
     setIsEditing(false)
   }
 
-  const handleSave = () => {
-    console.log('save')
+  const handleSave = async () => {
+    await updateProject(id, project)
+    setIsEditing(false)
   }
 
   const closeDialog = () => {
@@ -92,7 +100,7 @@ const ProjectDetail = () => {
             <Field className={styles.field}>
               <Label className={styles.label}>Project Name</Label>
               <Input
-                value={name}
+                value={project.name ?? ''}
                 onChange={onNameChange}
                 className={styles.input}
               />
@@ -100,7 +108,7 @@ const ProjectDetail = () => {
             <Field className={styles.field}>
               <Label className={styles.label}>Project Description</Label>
               <Textarea
-                value={description}
+                value={project.description ?? ''}
                 onChange={onDescriptionChange}
                 className={styles.textarea}
               />

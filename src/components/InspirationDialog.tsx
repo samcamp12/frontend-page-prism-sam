@@ -20,7 +20,7 @@ interface InspirationDialogProps {
     url: string
     date: string
     notes: string
-  }) => void
+  }) => Promise<void>
 }
 
 export const InspirationDialog = ({
@@ -28,9 +28,9 @@ export const InspirationDialog = ({
   closeDialog,
   onSaveInspiration,
 }: InspirationDialogProps) => {
-  const [inspirationUrl, setInspirationUrl] = useState<string>()
-  const [date, setDate] = useState<string>()
-  const [notes, setNotes] = useState<string>()
+  const [inspirationUrl, setInspirationUrl] = useState<string>('')
+  const [date, setDate] = useState<string>('')
+  const [notes, setNotes] = useState<string>('')
 
   const onUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInspirationUrl(e.target.value)
@@ -44,15 +44,36 @@ export const InspirationDialog = ({
     setNotes(e.target.value)
   }
 
+  const handleSaveInspiration = async () => {
+    try {
+      await onSaveInspiration({
+        url: inspirationUrl,
+        date,
+        notes,
+      })
+      setInspirationUrl('')
+      setDate('')
+      setNotes('')
+      closeDialog()
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
       <Dialog open={isOpen} onClose={closeDialog} className="relative z-50">
         <DialogBackdrop className="fixed inset-0 bg-black/40" />
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-          <DialogPanel className="max-w-lg space-y-4 border bg-white p-12">
-            <DialogTitle className="font-bold">Add Inspiration</DialogTitle>
+        <div className={styles.dialogContainer}>
+          <DialogPanel className={styles.dialogPanel}>
+            <DialogTitle className={styles.dialogTitle}>
+              Add Inspiration
+            </DialogTitle>
+            <hr className="-mx-8 my-4 border-t border-gray-200"></hr>
             <Field className={styles.field}>
-              <Label className={styles.label}>Website URL</Label>
+              <Label className={styles.label}>
+                Website URL<span className={'text-red-500'}>*</span>
+              </Label>
               <Input
                 value={inspirationUrl}
                 onChange={onUrlChange}
@@ -67,6 +88,7 @@ export const InspirationDialog = ({
                 value={date}
                 onChange={onDateChange}
                 className={styles.input}
+                type="date"
               />
             </Field>
             <Field className={styles.field}>
@@ -78,8 +100,12 @@ export const InspirationDialog = ({
               />
             </Field>
             <div className="flex gap-4">
-              <Button onClick={onSaveInspiration}>Save</Button>
-              <Button onClick={closeDialog}>Cancel</Button>
+              <Button className="flex-1" onClick={handleSaveInspiration}>
+                Save
+              </Button>
+              <Button className="flex-1" onClick={closeDialog}>
+                Cancel
+              </Button>
             </div>
           </DialogPanel>
         </div>

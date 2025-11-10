@@ -88,7 +88,7 @@ export const InspirationDialog = ({
                 value={date}
                 onChange={onDateChange}
                 className={styles.input}
-                type="date"
+                type="month"
               />
             </Field>
             <Field className={styles.field}>

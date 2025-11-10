@@ -2,18 +2,17 @@ import { TrashIcon } from '@heroicons/react/16/solid'
 import { Inspiration } from '../models/schema'
 
 import styles from './InspirationCard.module.css'
-import { deleteInspiration } from '../services/inspiration'
 
 interface InspirationCardProps {
   inspiration: Inspiration
+  onDeleteInspiration: (id: string) => Promise<void>
 }
 
-export const InspirationCard = ({ inspiration }: InspirationCardProps) => {
+export const InspirationCard = ({
+  inspiration,
+  onDeleteInspiration,
+}: InspirationCardProps) => {
   const websiteData = inspiration.websiteMetadata
-
-  const handleDeleteInspiration = async (id: string) => {
-    await deleteInspiration(id)
-  }
 
   return (
     <div className={styles.container}>
@@ -49,7 +48,7 @@ export const InspirationCard = ({ inspiration }: InspirationCardProps) => {
                 'Are you sure you want to delete this inspiration?'
               )
             ) {
-              handleDeleteInspiration(inspiration.id)
+              onDeleteInspiration(inspiration.id)
             }
           }}
         />

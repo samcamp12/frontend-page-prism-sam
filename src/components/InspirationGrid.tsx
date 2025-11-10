@@ -3,9 +3,14 @@ import { InspirationCard } from './InspirationCard'
 
 interface InspirationGridProps {
   inspirations: Inspiration[]
+  refreshProject: () => Promise<void>
+  onDeleteInspiration: (id: string) => Promise<void>
 }
 
-export const InspirationGrid = ({ inspirations }: InspirationGridProps) => {
+export const InspirationGrid = ({
+  inspirations,
+  onDeleteInspiration,
+}: InspirationGridProps) => {
   return (
     <div
       className={
@@ -15,7 +20,11 @@ export const InspirationGrid = ({ inspirations }: InspirationGridProps) => {
       {inspirations && inspirations.length > 0 ? (
         inspirations.map((inspiration) => {
           return (
-            <InspirationCard inspiration={inspiration} key={inspiration.id} />
+            <InspirationCard
+              inspiration={inspiration}
+              key={inspiration.id}
+              onDeleteInspiration={onDeleteInspiration}
+            />
           )
         })
       ) : (

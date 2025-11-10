@@ -95,5 +95,5 @@ export async function deleteInspiration(
 ): Promise<void> {
   await mockLatency(latencyMs)
   const db = await getDB()
-  await db.delete('inspirations', id)
+  const res = await db.delete('inspirations', id)
 }

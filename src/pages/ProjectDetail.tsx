@@ -10,7 +10,7 @@ import { Project } from '../models/schema'
 import { InspirationGrid } from '../components/InspirationGrid'
 import { InspirationDialog } from '../components/InspirationDialog'
 import { getMetadata, getScreenshot } from '../utils/api'
-import { createInspiration } from '../services/inspiration'
+import { createInspiration, deleteInspiration } from '../services/inspiration'
 
 const ProjectDetail = () => {
   const [project, setProject] = useState<Project>({} as Project)
@@ -90,6 +90,24 @@ const ProjectDetail = () => {
     await updateProject(id, {
       inspirations: [...project.inspirations, newInspiration],
     })
+    await refreshProject()
+  }
+
+  const refreshProject = async () => {
+    const updatedProject = await getProject(id)
+    if (updatedProject) {
+      setProject(updatedProject)
+    }
+  }
+
+  const handleDeleteInspiration = async (inspirationId: string) => {
+    await deleteInspiration(inspirationId)
+    await updateProject(id, {
+      inspirations: project.inspirations.filter(
+        (inspiration) => inspiration.id !== inspirationId
+      ),
+    })
+    await refreshProject()
   }
 
   return (
@@ -144,7 +162,11 @@ const ProjectDetail = () => {
             <h2 className={styles.subheading}>Inspirations</h2>
             <Button onClick={() => setIsOpen(true)}>Add Inspirations</Button>
           </div>
-          <InspirationGrid inspirations={project.inspirations} />
+          <InspirationGrid
+            inspirations={project.inspirations}
+            refreshProject={refreshProject}
+            onDeleteInspiration={handleDeleteInspiration}
+          />
         </div>
         {!isEditing && (
           <div className={styles.buttonContainer}>
